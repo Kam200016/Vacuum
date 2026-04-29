@@ -18,6 +18,8 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import type { Lesson, Module } from "@/data/course-data";
+import { LessonVideoBlock } from "@/components/course/lesson-video";
+import { useVideosStore } from "@/store/videos-store";
 
 // Local interface — will be replaced by the actual export from @/data/lecture-content
 export interface LectureContent {
@@ -62,6 +64,7 @@ export function LessonView({
   moduleProgress = 0,
 }: LessonViewProps) {
   const color = moduleColors[(module.number - 1) % moduleColors.length];
+  const video = useVideosStore((s) => s.videos[lesson.id]);
 
   // Lock body scroll when open
   useEffect(() => {
@@ -206,6 +209,8 @@ export function LessonView({
 
             {/* Content Area */}
             <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 custom-scrollbar">
+              <LessonVideoBlock lessonId={lesson.id} video={video} />
+
               {content ? (
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
