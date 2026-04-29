@@ -33,6 +33,12 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
+  if (typeof body !== "object" || body === null || Array.isArray(body)) {
+    return NextResponse.json(
+      { error: "Ожидается JSON-объект" },
+      { status: 400 },
+    );
+  }
   const data = body as { feedback?: unknown };
   if (typeof data.feedback !== "string" && data.feedback !== null) {
     return NextResponse.json(
