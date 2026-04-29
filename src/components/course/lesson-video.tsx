@@ -1,11 +1,20 @@
 "use client";
 
+import Link from "next/link";
 import { useRef, useState } from "react";
-import { Upload, Trash2, Video as VideoIcon, AlertCircle, Loader2 } from "lucide-react";
+import {
+  Upload,
+  Trash2,
+  Video as VideoIcon,
+  AlertCircle,
+  Loader2,
+  Lock,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useVideosStore, type LessonVideoDto } from "@/store/videos-store";
+import { useAuthStore } from "@/store/auth-store";
 
 const MAX_BYTES = 500 * 1024 * 1024;
 const ACCEPT = "video/mp4,video/webm,video/ogg,video/quicktime";
@@ -32,6 +41,7 @@ export function LessonVideoBlock({ lessonId, video }: LessonVideoProps) {
 
   const setVideo = useVideosStore((s) => s.setVideo);
   const removeVideo = useVideosStore((s) => s.removeVideo);
+  const admin = useAuthStore((s) => s.admin);
 
   const handleFiles = (files: FileList | null) => {
     if (!files || files.length === 0) return;
@@ -138,37 +148,42 @@ export function LessonVideoBlock({ lessonId, video }: LessonVideoProps) {
                 {formatBytes(video.sizeBytes)}
               </span>
             </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="text-[#475467]"
-                onClick={() => inputRef.current?.click()}
-                disabled={uploading || deleting}
-              >
-                <Upload className="w-3.5 h-3.5 mr-1.5" />
-                Заменить
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                onClick={handleDelete}
-                disabled={uploading || deleting}
-              >
-                <Trash2 className="w-3.5 h-3.5 mr-1.5" />
-                {deleting ? "Удаление…" : "Удалить"}
-              </Button>
-            </div>
+            {admin && (
+              <div className="flex items-center gap-2 shrink-0">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="text-[#475467]"
+                  onClick={() => inputRef.current?.click()}
+                  disabled={uploading || deleting}
+                  data-testid="video-replace-button"
+                >
+                  <Upload className="w-3.5 h-3.5 mr-1.5" />
+                  Заменить
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  onClick={handleDelete}
+                  disabled={uploading || deleting}
+                  data-testid="video-delete-button"
+                >
+                  <Trash2 className="w-3.5 h-3.5 mr-1.5" />
+                  {deleting ? "Удаление…" : "Удалить"}
+                </Button>
+              </div>
+            )}
           </div>
         </div>
-      ) : (
+      ) : admin ? (
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
+          data-testid="video-upload-dropzone"
           className={cn(
             "w-full rounded-xl border-2 border-dashed px-6 py-8 transition-colors",
             "flex flex-col items-center justify-center text-center",
@@ -189,6 +204,25 @@ export function LessonVideoBlock({ lessonId, video }: LessonVideoProps) {
             mp4 / webm / mov, до {formatBytes(MAX_BYTES)}
           </p>
         </button>
+      ) : (
+        <div
+          className="w-full rounded-xl border border-dashed border-[#E6E6E6] bg-[#FCFCFD] px-6 py-8 flex flex-col items-center justify-center text-center"
+          data-testid="video-locked-placeholder"
+        >
+          <Lock className="w-5 h-5 text-[#909AA5] mb-2" />
+          <p className="text-sm font-medium text-[#1D2939]">
+            Видео ещё не загружено
+          </p>
+          <p className="text-xs text-[#909AA5] mt-1">
+            Загрузка доступна администратору.{" "}
+            <Link
+              href="/admin/login"
+              className="text-[#3538CD] hover:underline"
+            >
+              Войти
+            </Link>
+          </p>
+        </div>
       )}
 
       {uploading && (

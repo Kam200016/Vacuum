@@ -3,6 +3,7 @@ import { unlink } from "node:fs/promises";
 import path from "node:path";
 import { db } from "@/lib/db";
 import { isValidLessonId } from "@/lib/videos";
+import { isAdminRequest } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -24,6 +25,13 @@ export async function GET(_req: Request, { params }: Params) {
 }
 
 export async function DELETE(_req: Request, { params }: Params) {
+  if (!(await isAdminRequest())) {
+    return NextResponse.json(
+      { error: "Требуется вход администратора" },
+      { status: 401 },
+    );
+  }
+
   const { lessonId } = await params;
   if (!isValidLessonId(lessonId)) {
     return NextResponse.json({ error: "Invalid lessonId" }, { status: 400 });
