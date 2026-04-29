@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import {
   GraduationCap,
   BarChart3,
-  Clock,
+  Video,
   Layers,
   RotateCcw,
 } from "lucide-react";
@@ -16,6 +16,7 @@ import { LessonView } from "@/components/course/lesson-view";
 import { courseData, getTotalLessons } from "@/data/course-data";
 import type { Lesson, Module } from "@/data/course-data";
 import { useProgressStore } from "@/store/progress-store";
+import { useVideosStore } from "@/store/videos-store";
 
 import { lectureContentMap } from "@/data/lecture-content";
 
@@ -29,7 +30,10 @@ export default function Home() {
   // Manually rehydrate the persisted Zustand store on the client to avoid SSR/CSR mismatch.
   useEffect(() => {
     useProgressStore.persist.rehydrate();
+    useVideosStore.getState().fetchAll();
   }, []);
+
+  const totalVideos = useVideosStore((s) => Object.keys(s.videos).length);
 
   const resetProgress = useProgressStore((s) => s.resetProgress);
   const { toggleLesson, isLessonCompleted, getModuleProgress } = useProgressStore();
@@ -188,9 +192,9 @@ export default function Home() {
                       value: String(totalLessons),
                     },
                     {
-                      icon: Clock,
-                      label: "Практика",
-                      value: "6",
+                      icon: Video,
+                      label: "Видео",
+                      value: `${totalVideos}/${totalLessons}`,
                     },
                     {
                       icon: BarChart3,
