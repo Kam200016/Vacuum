@@ -1,0 +1,103 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-inter);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.75rem;
+  --background: #FFFFFF;
+  --foreground: #1A1A1A;
+  --card: #FCFCFD;
+  --card-foreground: #1A1A1A;
+  --popover: #FFFFFF;
+  --popover-foreground: #1A1A1A;
+  --primary: #3538CD;
+  --primary-foreground: #FFFFFF;
+  --secondary: #FCFCFD;
+  --secondary-foreground: #1A1A1A;
+  --muted: #F5F5F7;
+  --muted-foreground: #737373;
+  --accent: #FCFCFD;
+  --accent-foreground: #1A1A1A;
+  --destructive: #EF4444;
+  --border: #E6E6E6;
+  --input: #E6E6E6;
+  --ring: #3538CD;
+}
+
+.dark {
+  --background: #0F0F0F;
+  --foreground: #EDEDED;
+  --card: #1A1A1A;
+  --card-foreground: #EDEDED;
+  --popover: #0F0F0F;
+  --popover-foreground: #EDEDED;
+  --primary: #3538CD;
+  --primary-foreground: #FFFFFF;
+  --secondary: #1A1A1A;
+  --secondary-foreground: #EDEDED;
+  --muted: #262626;
+  --muted-foreground: #A3A3A3;
+  --accent: #1A1A1A;
+  --accent-foreground: #EDEDED;
+  --destructive: #EF4444;
+  --border: #262626;
+  --input: #262626;
+  --ring: #3538CD;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #D4D4D8;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #A1A1AA;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Reset checkbox color override for green checked state */
+[data-slot="checkbox"][data-state="checked"] {
+  background-color: #22C55E !important;
+  border-color: #22C55E !important;
+}
+
+/* Checkbox override for indigo */
+.holst-checkbox[data-slot="checkbox"][data-state="checked"] {
+  background-color: #3538CD !important;
+  border-color: #3538CD !important;
+}
