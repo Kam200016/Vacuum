@@ -19,6 +19,7 @@ import type { Lesson, Module } from "@/data/course-data";
 import { useProgressStore } from "@/store/progress-store";
 import { useVideosStore } from "@/store/videos-store";
 import { usePresentationsStore } from "@/store/presentations-store";
+import { useHomeworkStore } from "@/store/homework-store";
 import { useAuthStore } from "@/store/auth-store";
 
 import { lectureContentMap } from "@/data/lecture-content";
@@ -35,6 +36,7 @@ export default function Home() {
     useProgressStore.persist.rehydrate();
     useVideosStore.getState().fetchAll();
     usePresentationsStore.getState().fetchAll();
+    useHomeworkStore.getState().fetchAll();
     useAuthStore.getState().fetchMe();
   }, []);
 
