@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   GraduationCap,
@@ -25,6 +25,11 @@ export default function Home() {
   const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set());
   const [activeModuleId, setActiveModuleId] = useState<string | null>(null);
   const [activeLesson, setActiveLesson] = useState<{ lesson: Lesson; module: Module } | null>(null);
+
+  // Manually rehydrate the persisted Zustand store on the client to avoid SSR/CSR mismatch.
+  useEffect(() => {
+    useProgressStore.persist.rehydrate();
+  }, []);
 
   const resetProgress = useProgressStore((s) => s.resetProgress);
   const { toggleLesson, isLessonCompleted, getModuleProgress } = useProgressStore();

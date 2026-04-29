@@ -56,6 +56,7 @@ export const useProgressStore = create<ProgressState>()(
     }),
     {
       name: "vacuum-course-progress",
+      skipHydration: true,
     }
   )
 );
