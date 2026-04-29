@@ -44,3 +44,17 @@ model LessonVideo {
 
   @@index([moduleId])
 }
+
+model LessonPresentation {
+  id           String   @id @default(cuid())
+  lessonId     String   @unique
+  moduleId     String
+  url          String
+  originalName String
+  mimeType     String
+  sizeBytes    Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([moduleId])
+}

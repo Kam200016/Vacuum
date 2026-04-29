@@ -17,11 +17,13 @@ export async function GET(_req: Request, { params }: Params) {
   if (!isValidLessonId(lessonId)) {
     return NextResponse.json({ error: "Invalid lessonId" }, { status: 400 });
   }
-  const video = await db.lessonVideo.findUnique({ where: { lessonId } });
-  if (!video) {
-    return NextResponse.json({ video: null }, { status: 404 });
+  const presentation = await db.lessonPresentation.findUnique({
+    where: { lessonId },
+  });
+  if (!presentation) {
+    return NextResponse.json({ presentation: null }, { status: 404 });
   }
-  return NextResponse.json({ video });
+  return NextResponse.json({ presentation });
 }
 
 export async function DELETE(_req: Request, { params }: Params) {
@@ -36,15 +38,17 @@ export async function DELETE(_req: Request, { params }: Params) {
   if (!isValidLessonId(lessonId)) {
     return NextResponse.json({ error: "Invalid lessonId" }, { status: 400 });
   }
-  const video = await db.lessonVideo.findUnique({ where: { lessonId } });
-  if (!video) {
+  const presentation = await db.lessonPresentation.findUnique({
+    where: { lessonId },
+  });
+  if (!presentation) {
     return NextResponse.json({ ok: true, deleted: false });
   }
 
   const fileAbs = path.join(
     process.cwd(),
     "public",
-    video.url.replace(/^\//, "").split("?")[0],
+    presentation.url.replace(/^\//, "").split("?")[0],
   );
   try {
     await unlink(fileAbs);
@@ -52,6 +56,6 @@ export async function DELETE(_req: Request, { params }: Params) {
     // ignore missing file
   }
 
-  await db.lessonVideo.delete({ where: { lessonId } });
+  await db.lessonPresentation.delete({ where: { lessonId } });
   return NextResponse.json({ ok: true, deleted: true });
 }
