@@ -11,6 +11,7 @@ import {
   lessonIdToModuleId,
   safeExtensionFor,
 } from "@/lib/videos";
+import { isAdminRequest } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -23,6 +24,13 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  if (!(await isAdminRequest())) {
+    return NextResponse.json(
+      { error: "Требуется вход администратора" },
+      { status: 401 },
+    );
+  }
+
   let formData: FormData;
   try {
     formData = await req.formData();

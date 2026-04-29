@@ -17,6 +17,7 @@ import { courseData, getTotalLessons } from "@/data/course-data";
 import type { Lesson, Module } from "@/data/course-data";
 import { useProgressStore } from "@/store/progress-store";
 import { useVideosStore } from "@/store/videos-store";
+import { useAuthStore } from "@/store/auth-store";
 
 import { lectureContentMap } from "@/data/lecture-content";
 
@@ -31,6 +32,7 @@ export default function Home() {
   useEffect(() => {
     useProgressStore.persist.rehydrate();
     useVideosStore.getState().fetchAll();
+    useAuthStore.getState().fetchMe();
   }, []);
 
   const totalVideos = useVideosStore((s) => Object.keys(s.videos).length);
