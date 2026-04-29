@@ -126,16 +126,13 @@ export function LessonView({
             aria-hidden="true"
           />
 
-          {/* Panel */}
+          {/* Panel — fullscreen */}
           <motion.div
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed inset-y-0 right-0 z-50 flex flex-col
-                       w-full sm:w-[560px] lg:w-[640px]
-                       bg-white border-l border-[#E6E6E6]
-                       shadow-[-8px_0_24px_0_rgb(0_0_0/0.12)]"
+            initial={{ opacity: 0, scale: 0.985 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.985 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="fixed inset-0 z-50 flex flex-col bg-white"
             role="dialog"
             aria-modal="true"
             aria-label={`Урок: ${lesson.title}`}
@@ -154,7 +151,8 @@ export function LessonView({
             </div>
 
             {/* Header */}
-            <div className="shrink-0 px-4 sm:px-6 pt-4 pb-4">
+            <div className="shrink-0 px-4 sm:px-6 lg:px-10 pt-4 pb-4">
+              <div className="max-w-7xl mx-auto w-full">
               {/* Top row: close button + module badge */}
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2 min-w-0">
@@ -204,23 +202,27 @@ export function LessonView({
                       </span>
                     )}
                   </p>
-                  <h2 className="text-lg font-semibold text-[#1D2939] leading-snug">
+                  <h2 className="text-lg sm:text-xl font-semibold text-[#1D2939] leading-snug">
                     {lesson.title}
                   </h2>
                 </div>
+              </div>
               </div>
             </div>
 
             <Separator className="bg-[#E6E6E6]" />
 
             {/* Content Area */}
-            <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 custom-scrollbar">
-              <LessonVideoBlock lessonId={lesson.id} video={video} />
+            <div className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-10 py-6 custom-scrollbar">
+              <div className="max-w-7xl mx-auto w-full">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <LessonVideoBlock lessonId={lesson.id} video={video} />
 
-              <LessonPresentationBlock
-                lessonId={lesson.id}
-                presentation={presentation}
-              />
+                <LessonPresentationBlock
+                  lessonId={lesson.id}
+                  presentation={presentation}
+                />
+              </div>
 
               <LessonHomeworkBlock lessonId={lesson.id} />
 
@@ -264,10 +266,12 @@ export function LessonView({
                   </p>
                 </motion.div>
               )}
+              </div>
             </div>
 
             {/* Bottom Action Bar */}
-            <div className="shrink-0 border-t border-[#E6E6E6] bg-[#FCFCFD] px-4 sm:px-6 py-4">
+            <div className="shrink-0 border-t border-[#E6E6E6] bg-[#FCFCFD] px-4 sm:px-6 lg:px-10 py-4">
+              <div className="max-w-7xl mx-auto w-full">
               <div className="flex items-center justify-between gap-3">
                 {/* Complete checkbox */}
                 <label className="flex items-center gap-2.5 cursor-pointer select-none min-w-0">
@@ -343,6 +347,7 @@ export function LessonView({
                 >
                   {moduleProgress}%
                 </span>
+              </div>
               </div>
             </div>
           </motion.div>
