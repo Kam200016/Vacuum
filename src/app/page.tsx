@@ -8,6 +8,7 @@ import {
   Video,
   Layers,
   RotateCcw,
+  FileText,
 } from "lucide-react";
 import { Header } from "@/components/course/header";
 import { Sidebar } from "@/components/course/sidebar";
@@ -17,6 +18,7 @@ import { courseData, getTotalLessons } from "@/data/course-data";
 import type { Lesson, Module } from "@/data/course-data";
 import { useProgressStore } from "@/store/progress-store";
 import { useVideosStore } from "@/store/videos-store";
+import { usePresentationsStore } from "@/store/presentations-store";
 import { useAuthStore } from "@/store/auth-store";
 
 import { lectureContentMap } from "@/data/lecture-content";
@@ -32,10 +34,14 @@ export default function Home() {
   useEffect(() => {
     useProgressStore.persist.rehydrate();
     useVideosStore.getState().fetchAll();
+    usePresentationsStore.getState().fetchAll();
     useAuthStore.getState().fetchMe();
   }, []);
 
   const totalVideos = useVideosStore((s) => Object.keys(s.videos).length);
+  const totalPresentations = usePresentationsStore(
+    (s) => Object.keys(s.presentations).length,
+  );
 
   const resetProgress = useProgressStore((s) => s.resetProgress);
   const { toggleLesson, isLessonCompleted, getModuleProgress } = useProgressStore();
@@ -181,7 +187,7 @@ export default function Home() {
                 </p>
 
                 {/* Stats Grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 max-w-3xl">
                   {[
                     {
                       icon: Layers,
@@ -197,6 +203,11 @@ export default function Home() {
                       icon: Video,
                       label: "Видео",
                       value: `${totalVideos}/${totalLessons}`,
+                    },
+                    {
+                      icon: FileText,
+                      label: "Презентации",
+                      value: `${totalPresentations}/${totalLessons}`,
                     },
                     {
                       icon: BarChart3,

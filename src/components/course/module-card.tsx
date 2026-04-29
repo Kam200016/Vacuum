@@ -15,10 +15,12 @@ import {
   CheckCircle2,
   Beaker,
   Video,
+  FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useProgressStore } from "@/store/progress-store";
 import { useVideosStore } from "@/store/videos-store";
+import { usePresentationsStore } from "@/store/presentations-store";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Module, Lesson } from "@/data/course-data";
 
@@ -56,6 +58,11 @@ export function ModuleCard({ module, isExpanded, onToggle, searchQuery, onLesson
   const videos = useVideosStore((s) => s.videos);
   const videoCount = module.lessons.reduce(
     (acc, l) => (videos[l.id] ? acc + 1 : acc),
+    0,
+  );
+  const presentations = usePresentationsStore((s) => s.presentations);
+  const presentationCount = module.lessons.reduce(
+    (acc, l) => (presentations[l.id] ? acc + 1 : acc),
     0,
   );
   const Icon = iconMap[module.icon] || BookOpen;
@@ -128,6 +135,15 @@ export function ModuleCard({ module, isExpanded, onToggle, searchQuery, onLesson
                 {videoCount}/{module.lessons.length}
               </span>
             )}
+            {presentationCount > 0 && (
+              <span
+                className="flex items-center gap-1 text-[10px] font-semibold text-[#3538CD] bg-[#3538CD]/8 px-2 py-0.5 rounded-full"
+                title={`Презентация загружена для ${presentationCount} из ${module.lessons.length} уроков`}
+              >
+                <FileText className="w-3 h-3" />
+                {presentationCount}/{module.lessons.length}
+              </span>
+            )}
             {progress === 100 && (
               <span className="text-[10px] font-bold text-white bg-green-500 px-2 py-0.5 rounded-full">
                 ЗАВЕРШЁН
@@ -186,6 +202,7 @@ export function ModuleCard({ module, isExpanded, onToggle, searchQuery, onLesson
                 {lessonsToShow.map((lesson: Lesson) => {
                   const completed = isLessonCompleted(lesson.id);
                   const hasVideo = Boolean(videos[lesson.id]);
+                  const hasPresentation = Boolean(presentations[lesson.id]);
                   return (
                     <motion.div
                       key={lesson.id}
@@ -238,6 +255,15 @@ export function ModuleCard({ module, isExpanded, onToggle, searchQuery, onLesson
                         >
                           <Video className="w-3 h-3" />
                           Видео
+                        </span>
+                      )}
+                      {hasPresentation && (
+                        <span
+                          className="flex items-center gap-1 text-[10px] font-semibold text-[#3538CD] bg-[#3538CD]/8 px-2 py-0.5 rounded-full shrink-0"
+                          title="Презентация загружена"
+                        >
+                          <FileText className="w-3 h-3" />
+                          Слайды
                         </span>
                       )}
                       {lesson.isPractice && (
