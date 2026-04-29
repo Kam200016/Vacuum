@@ -20,6 +20,7 @@ import { Separator } from "@/components/ui/separator";
 import type { Lesson, Module } from "@/data/course-data";
 import { LessonVideoBlock } from "@/components/course/lesson-video";
 import { LessonPresentationBlock } from "@/components/course/lesson-presentation";
+import { LessonHomeworkBlock } from "@/components/course/lesson-homework";
 import { useVideosStore } from "@/store/videos-store";
 import { usePresentationsStore } from "@/store/presentations-store";
 
@@ -220,6 +221,8 @@ export function LessonView({
                 lessonId={lesson.id}
                 presentation={presentation}
               />
+
+              <LessonHomeworkBlock lessonId={lesson.id} />
 
               {content ? (
                 <motion.div
